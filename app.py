@@ -49,7 +49,7 @@ def main():
     results_list = []
     hyperlinks = []
     dead_links = []
-    protocol = "https://"
+    PROTOCOL = "https://"
 
     # GET VALUES FROM HTML
     if request.method == 'POST':
@@ -60,8 +60,8 @@ def main():
             val = request.form['value']
 
             # FIXING URL'S
-            if url.startswith(protocol) is not True:
-                url = protocol + url
+            if url.startswith(PROTOCOL) is not True:
+                url = PROTOCOL + url
 
             domain_name = urlparse(url).netloc
 
@@ -114,7 +114,7 @@ def main():
                     filtered_content = list(set(filtered_content))
                     for link in filtered_content:
                         if link.startswith("/"):
-                            link = protocol + domain_name + link
+                            link = PROTOCOL + domain_name + link
                             hyperlinks.append(link)
                         else:
                             hyperlinks.append(link)
@@ -123,7 +123,7 @@ def main():
                     scraped_tags = [x[atr] for x in soup.find_all(tag, attrs={atr: True})]
                     filtered_content = [x.strip() for x in scraped_tags if str(x).startswith("http") or str(x).startswith("/")]
                     filtered_content = list(set(filtered_content))
-                    asyncio.run(status_check_v2(filtered_content, dead_links, protocol, domain_name))
+                    asyncio.run(status_check_v2(filtered_content, dead_links, PROTOCOL, domain_name))
                 elif atr.endswith('@'):
                     atr = atr.removesuffix('@')
                     scraped_tags = soup.find_all(tag, attrs={atr: True})
