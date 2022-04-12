@@ -108,7 +108,7 @@
 
         function empty() {
             let url = document.getElementById("idurl").value;
-            if (url.length == 0) {
+            if (url.length === 0) {
                 alert("Invalid URL..");
                 return false;
             } else {
@@ -125,7 +125,7 @@
         document.addEventListener("submit", () => {
             let value = field1.value
             let value2 = field2.value;
-            if (value.length == 0 || value2.endsWith("!")) {
+            if (value.length === 0 || value2.endsWith("!")) {
                 home.innerText = "Searching dead links...";
             } else {
                 home.innerText = "Scraping...";
