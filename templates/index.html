@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-y:scroll; background-color: #e9ecef;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='/img/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit-3.9.4/css/uikit.min.css') }}">
+    <title>HTML Scraper</title>
+
+</head>
+
+<body>
+
+    <div>
+        <form action="/" method="POST" spellcheck="false">
+            <div class="uk-section uk-section-secondary uk-section-xsmall uk-text-center uk-width-1-1 uk-align-center uk-box-shadow-medium"
+                style="background-color: #598392;">
+                <h1 class="uk-text-normal" style="font-family: 'Trebuchet MS';">HTML SCRAPER</h1>
+                <h4 id="home" class="uk-text uk-text-center uk-margin-small">[...]</h4>
+                <input class="uk-input uk-form-width-large uk-text-medium uk-align-center uk-margin-small-bottom"
+                    type="text" name="url" id="idurl" autocomplete="off" placeholder="URL" value="{{ url }}"
+                    style="color: whitesmoke">
+                <div class="uk-container uk-text-center uk-margin-small-bottom" id="top">
+                    <input class="uk-input uk-form-width-small uk-text-medium uk-margin-small-bottom" type="text"
+                        name="tag" id="idtag" autocomplete="off" placeholder="Tag" style="color: whitesmoke">
+                    <input readonly class="uk-input uk-form-width-small uk-text-medium uk-margin-small-bottom"
+                        type="text" name="attribute" id="idattribute" autocomplete="off" placeholder="Attribute"
+                        style="color: whitesmoke">
+                    <input readonly class="uk-input uk-form-width-small uk-text-medium uk-margin-small-bottom"
+                        type="text" name="value" id="idvalue" autocomplete="off" placeholder="Value"
+                        style="color: whitesmoke">
+                </div>
+                <input id="idbutton" type="submit" class="uk-button uk-button-default uk-align-center" name="approve"
+                    value="submit" onclick="return empty()">
+
+            </div>
+        </form>
+    </div>
+
+    <div id="results"
+        class="uk-section uk-section-default uk-section-xsmall uk-text-left uk-width-1-1 uk-width-2-3@m uk-align-center uk-box-shadow-medium">
+        <ol id="ol" class="uk-text-break uk-margin-small-left uk-margin-small-right uk-animation-shake">
+            {% for tag in results_list %}
+            <li>{{ tag }}</li>
+            {% endfor %}
+            {% for tag in dead_links %}
+            <li><a href="{{ tag }}" target="_blank" style="color: #da5552;">{{ tag }}</a></li>
+            {% endfor %}
+            {% for tag in hyperlinks %}
+            <li><a href="{{ tag }}" target="_blank" style="color: #598392;">{{ tag }}</a></li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <span class="uk-label uk-label-success uk-position-fixed uk-position-bottom-right"
+        style="background-color: #598392;">{{ used_tags }}</span>
+    <div id="help"
+        class="uk-section uk-section-default uk-section-xsmall uk-width-1-1 uk-width-2-3@m uk-align-center uk-text-center"
+        style="background-color: #e9ecef;">
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            <u>About <b>HTML Scraper</b></u>
+        </div>
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            <b>URL</b>: Searching dead links
+        </div>
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            <b>Tag</b>: [@]
+        </div>
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            <b>Attribute</b>: [!/@/#/$]
+        </div>
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            <b>Value</b>: [@]
+        </div>
+        <div class="uk-text-medium uk-align-center uk-margin-small">
+            ! - dead links / @ - texts / # - hyperlinks / $ - values</div>
+    </div>
+    </div>
+
+    <script>
+        const field1 = document.getElementById("idtag");
+        const field2 = document.getElementById("idattribute");
+        const field3 = document.getElementById("idvalue");
+        const results = document.getElementById("results");
+        const home = document.getElementById("home");
+
+        field1.addEventListener("input", () => {
+            if (field1.value.length > 0) {
+                field2.removeAttribute("readonly");
+            } else {
+                field2.value = "";
+                field3.value = "";
+                field2.setAttribute("readonly", true);
+                field3.setAttribute("readonly", true);
+            }
+        })
+
+        field2.addEventListener("input", () => {
+            if (field2.value.length > 0) {
+                field3.removeAttribute("readonly");
+            } else {
+                field3.setAttribute("readonly", true);
+                field3.setAttribute("readonly", true);
+            }
+        })
+
+        function empty() {
+            let url = document.getElementById("idurl").value;
+            if (url.length == 0) {
+                alert("Invalid URL..");
+                return false;
+            } else {
+                //
+            }
+        }
+
+        if (document.getElementById('ol').getElementsByTagName('li').length >= 1) {
+            results.removeAttribute("hidden");
+        } else {
+            results.setAttribute("hidden", true);
+        }
+
+        document.addEventListener("submit", () => {
+            let value = field1.value
+            let value2 = field2.value;
+            if (value.length == 0 || value2.endsWith("!")) {
+                home.innerText = "Searching dead links...";
+            } else {
+                home.innerText = "Scraping...";
+            }
+        })
+    </script>
+
+</body>
+
+</html>
